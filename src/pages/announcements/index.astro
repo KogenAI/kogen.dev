@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import { visibleAnnouncements, dateLabel, announcementUrl } from '../../lib/announcements';
+const posts = await visibleAnnouncements();
+---
+<Base title="Announcements — Kogen" description="Release notes and short updates from Kogen.">
+ <main id="main" class="wrap"><div class="prose announcements"><p class="eyebrow">From the project</p><h1>Announcements</h1><p class="lead">Release notes and short updates from Kogen.</p>
+ {posts.length ? <ol class="post-list">{posts.map(post => <li>
+  <p class="post-meta">{post.data.status === 'draft' ? 'Release draft · Publication date to be confirmed' : <time datetime={post.data.publishedAt!.toISOString()}>{dateLabel(post.data.publishedAt!)}</time>}</p>
+  <h2><a href={announcementUrl(post)}>{post.data.title}</a></h2><p>{post.data.summary}</p>
+  <a class="post-link" href={announcementUrl(post)}>{post.data.status === 'draft' ? 'Read the draft' : 'Read the announcement'} <span aria-hidden="true">↗</span></a>
+ </li>)}</ol> : <p>There are no announcements yet.</p>}
+ </div></main>
+</Base>

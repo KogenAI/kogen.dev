@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { visibleAnnouncements, dateLabel, announcementPath } from '../../lib/announcements';
+export async function getStaticPaths() {
+ return (await visibleAnnouncements()).map(post => ({params:{path:announcementPath(post)},props:{post}}));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Base title={`${post.data.title} — Kogen`} description={post.data.summary}>
+ <main id="main" class="wrap"><article class="prose announcement"><p class="eyebrow"><a href="/announcements/">Announcements</a></p><h1>{post.data.title}</h1>
+ <p class="post-meta">{post.data.author}{post.data.status === 'draft' ? ' · Release draft' : <> · <time datetime={post.data.publishedAt!.toISOString()}>{dateLabel(post.data.publishedAt!)}</time></>}{post.data.updatedAt && <> · Updated <time datetime={post.data.updatedAt.toISOString()}>{dateLabel(post.data.updatedAt)}</time></>}</p>
+ {post.data.status === 'draft' && <p class="draft-note">Prepared for the first public release. Publication date and release details are still to be confirmed.</p>}
+ <Content/><a class="back" href="/announcements/">← All announcements</a>
+ </article></main>
+</Base>

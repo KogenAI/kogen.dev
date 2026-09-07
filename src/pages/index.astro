@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+const concepts = [
+ ['Shaper', 'Shapes the feature: what changes, how it should work, and which product, UX, or technical decisions matter.'],
+ ['Intent', 'Captures the shaped feature precisely enough for Kogen to build it autonomously.'],
+ ['Build', 'Implements the Intent, checks the result, independently reviews it, and reworks it when necessary.'],
+ ['Commit', 'The checked and accepted implementation of one Intent.'],
+];
+---
+<Base><main id="main" class="wrap">
+ <section class="hero" aria-labelledby="headline"><div><p class="eyebrow">Development preview</p><h1 id="headline">Shape the feature.<br/>Leave the build<br class="desktop-break"/> to Kogen.</h1><p class="intro">Make the product and UX decisions that define the feature. Specify technical decisions when they matter. Kogen handles the implementation, checking, independent review, rework, and resulting commit.</p><div class="actions"><a class="button" href="https://github.com/KogenAI/kogen">View source <span aria-hidden="true">↗</span></a><a href="/origins/">Read the origins <span aria-hidden="true">↗</span></a></div></div><figure class="kit"><img src="/brand/kogen-kit-black.svg" alt="The Kogen model kit: separate K-shaped parts held in a sprue, ready to assemble." width="420" height="434" fetchpriority="high" /></figure></section>
+ <section id="how-it-works" class="process"><div class="section-heading"><h2>One shaped feature.<br/>One accepted commit.</h2><p>You approve the Intent.<br/>Kogen takes the Build from there.</p></div><ol class="concepts">{concepts.map(([name,description],i)=><li><span class="number">0{i+1}<span aria-hidden="true">{i<3?' →':' ↳'}</span></span><h3>{name}</h3><p>{description}</p></li>)}</ol><p class="approval-note">Shape → Approve → Build → Commit. Checks and independent review happen inside the Build, before the Commit.</p></section>
+ <section class="development" id="development"><div><p class="eyebrow">In development</p><h2>A small core,<br/>built carefully.</h2></div><div><p>Kogen’s core is under active development. The source is available for inspection, but the product is not yet intended for general use.</p><p>A demonstration of the full workflow is planned.</p><a href="/origins/">How Kogen got here <span aria-hidden="true">↗</span></a></div></section>
+ </main></Base>

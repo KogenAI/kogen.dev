@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Shape the feature. Leave the build to Kogen.</title>
+  <desc id="description">Kogen social preview with the product headline and monochrome model-kit mark.</desc>
+  <style>
+    @font-face {
+      font-family: "IBM Plex Sans";
+      src: url("../fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+      font-weight: 600;
+    }
+    .headline {
+      fill: #171717;
+      font: 600 68px/1.08 "IBM Plex Sans", Arial, sans-serif;
+      letter-spacing: -1.4px;
+    }
+  </style>
+  <rect width="1280" height="640" fill="#fff"/>
+  <text class="headline" x="80" y="240">
+    <tspan x="80" dy="0">Shape the feature.</tspan>
+    <tspan x="80" dy="86">Leave the build</tspan>
+    <tspan x="80" dy="86">to Kogen.</tspan>
+  </text>
+  <g transform="translate(850 106) scale(.88)" fill="none" stroke="#171717" stroke-width="5" stroke-linejoin="round">
+    <path d="M80 140L55 20L63 0H347L355 20L330 140M55 20H355"/>
+    <path d="M80 140H330L360 400H50Z"/>
+    <path d="M80 140L30 120L0 340L50 400M330 140L380 120L410 340L360 400"/>
+    <path d="M50 400L62 424H348L360 400"/>
+    <g transform="translate(88 160) scale(.9)">
+      <rect x="0" y="0" width="260" height="250" rx="13"/>
+      <g fill="#171717" stroke="none">
+        <polygon points="60.5,0 60.5,27.5 62,35.5 64,35.5 65.5,27.5 65.5,0"/>
+        <polygon points="62,214.5 60.5,222.5 60.5,250 65.5,250 65.5,222.5 64,214.5"/>
+        <polygon points="206.5,45 214.5,46.5 260,46.5 260,41.5 214.5,41.5 206.5,43"/>
+        <polygon points="206.5,207 214.5,208.5 260,208.5 260,203.5 214.5,203.5 206.5,205"/>
+        <polygon points="162.5,0 162.5,43.133 164,51.133 166,51.133 167.5,43.133 167.5,0"/>
+        <polygon points="164,93.557 162.5,101.557 162.5,148.443 164,156.443 166,156.443 167.5,148.443 167.5,101.557 166,93.557"/>
+        <polygon points="164,198.867 162.5,206.867 162.5,250 167.5,250 167.5,206.867 166,198.867"/>
+      </g>
+      <g fill="#171717">
+        <rect x="45" y="35" width="36" height="180"/>
+        <g transform="translate(124 100) rotate(-34)"><rect x="0" y="-18" width="100" height="36"/></g>
+        <g transform="translate(124 150) rotate(34)"><rect x="0" y="-18" width="100" height="36"/></g>
+      </g>
+    </g>
+  </g>
+</svg>

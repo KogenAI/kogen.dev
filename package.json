@@ -1,0 +1,17 @@
+{
+  "name": "kogen-website",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:preview": "KOGEN_INCLUDE_DRAFTS=true astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.3.1"
+  }
+}

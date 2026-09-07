@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 420 434" role="img" aria-label="Kogen kit with all parts connected to outer runner" style="color:#171717"><title>Kogen kit with all parts connected to outer runner</title><g fill="none" stroke="#171717" stroke-width="5" stroke-linejoin="round">
+<path d="M80 140L55 20L63 0H347L355 20L330 140M55 20H355"/>
+<path d="M80 140H330L360 400H50Z"/>
+<path d="M80 140L30 120L0 340L50 400M330 140L380 120L410 340L360 400"/>
+<path d="M50 400L62 424H348L360 400"/>
+</g><g transform="translate(88 160) scale(.9)"><g fill="none" stroke="#171717" stroke-width="5" stroke-linejoin="round">
+<rect x="0" y="0" width="260" height="250" rx="13"/>
+<g fill="#171717" stroke="none"><polygon points="60.500,0.000 60.500,27.500 62.000,35.500 64.000,35.500 65.500,27.500 65.500,0.000"/><polygon points="62.000,214.500 60.500,222.500 60.500,250.000 65.500,250.000 65.500,222.500 64.000,214.500"/><polygon points="206.500,45.000 214.500,46.500 260.000,46.500 260.000,41.500 214.500,41.500 206.500,43.000"/><polygon points="206.500,207.000 214.500,208.500 260.000,208.500 260.000,203.500 214.500,203.500 206.500,205.000"/><polygon points="162.500,0.000 162.500,43.133 164.000,51.133 166.000,51.133 167.500,43.133 167.500,0.000"/><polygon points="164.000,93.557 162.500,101.557 162.500,148.443 164.000,156.443 166.000,156.443 167.500,148.443 167.500,101.557 166.000,93.557"/><polygon points="164.000,198.867 162.500,206.867 162.500,250.000 167.500,250.000 167.500,206.867 166.000,198.867"/></g>
+</g>
+<g fill="#171717"><rect x="45" y="35" width="36" height="180"/>
+<g transform="translate(124 100) rotate(-34)"><rect x="0" y="-18" width="100" height="36"/></g>
+<g transform="translate(124 150) rotate(34)"><rect x="0" y="-18" width="100" height="36"/></g></g></g></svg>
