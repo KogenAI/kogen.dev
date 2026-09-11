@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { visibleNotes, noteDateLabel, notePath } from '../../lib/notes';
+export async function getStaticPaths() {
+ return (await visibleNotes()).map(note => ({params:{path:notePath(note)},props:{note}}));
+}
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<Base title={`${note.data.title} — Kogen`} description={note.data.summary}>
+ <main id="main" class="wrap"><article class="prose note"><p class="eyebrow"><a href="/notes/">Notes</a></p><h1>{note.data.title}</h1>
+ <p class="post-meta">{note.data.author}{note.data.status === 'draft' ? ' · Draft' : <> · <time datetime={note.data.publishedAt!.toISOString()}>{noteDateLabel(note.data.publishedAt!)}</time></>}{note.data.updatedAt && <> · Updated <time datetime={note.data.updatedAt.toISOString()}>{noteDateLabel(note.data.updatedAt)}</time></>}</p>
+ {note.data.status === 'draft' && <p class="draft-note">This note is an editorial draft. Its publication date is still to be confirmed.</p>}
+ <Content/><a class="back" href="/notes/">← All notes</a>
+ </article></main>
+</Base>

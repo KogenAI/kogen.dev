@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import { visibleNotes, noteDateLabel, noteUrl } from '../../lib/notes';
+const notes = await visibleNotes();
+---
+<Base title="Notes — Kogen" description="Practical findings from building Kogen.">
+ <main id="main" class="wrap"><div class="prose notes"><p class="eyebrow">From the work</p><h1>Notes</h1><p class="lead">Practical findings from building Kogen.</p>
+ {notes.length ? <ol class="post-list">{notes.map(note => <li>
+  <p class="post-meta">{note.data.status === 'draft' ? 'Draft · Publication date to be confirmed' : <time datetime={note.data.publishedAt!.toISOString()}>{noteDateLabel(note.data.publishedAt!)}</time>}</p>
+  <h2><a href={noteUrl(note)}>{note.data.title}</a></h2><p>{note.data.summary}</p>
+  <a class="post-link" href={noteUrl(note)}>{note.data.status === 'draft' ? 'Read the draft' : 'Read the note'} <span aria-hidden="true">↗</span></a>
+ </li>)}</ol> : <p>There are no notes yet.</p>}
+ </div></main>
+</Base>

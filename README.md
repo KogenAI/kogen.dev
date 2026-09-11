@@ -1,6 +1,6 @@
 # kogen.dev
 
-The Kogen website: landing page, Origins, and announcements.
+The Kogen website: landing page, Origins, Notes, and announcements.
 Built with Astro and intended for Cloudflare Pages.
 
 ## Development
@@ -46,6 +46,13 @@ Published URLs use `/announcements/YYYY-MM-DD/slug/`, with dates in UTC.
 Drafts appear during development and in `npm run build:preview`; the normal
 build excludes them. Run the normal build again before deploying after a draft
 preview.
+
+## Notes
+
+Write practical findings from building Kogen in `src/content/notes/`. Notes use
+the same draft and publication fields as announcements, but published URLs use
+`/notes/YYYY-MM-DD/slug/`. Add supporting media under `public/notes/` and use
+root-relative paths from the Markdown source.
 
 ## Project
 
