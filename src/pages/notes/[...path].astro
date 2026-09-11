@@ -8,7 +8,7 @@ export async function getStaticPaths() {
 const { note } = Astro.props;
 const { Content } = await render(note);
 ---
-<Base title={`${note.data.title} — Kogen`} description={note.data.summary}>
+<Base title={`${note.data.title} — Kogen`} description={note.data.summary} socialImagePath={`/notes/social/${note.id}.png`} socialImageWidth={1200} socialImageHeight={630} socialImageAlt={`${note.data.title} — Kogen Note`}>
  <main id="main" class="wrap"><article class="prose note"><p class="eyebrow"><a href="/notes/">Notes</a></p><h1>{note.data.title}</h1>
  <p class="post-meta">{note.data.author}{note.data.status === 'draft' ? ' · Draft' : <> · <time datetime={note.data.publishedAt!.toISOString()}>{noteDateLabel(note.data.publishedAt!)}</time></>}{note.data.updatedAt && <> · Updated <time datetime={note.data.updatedAt.toISOString()}>{noteDateLabel(note.data.updatedAt)}</time></>}</p>
  {note.data.status === 'draft' && <p class="draft-note">This note is an editorial draft. Its publication date is still to be confirmed.</p>}

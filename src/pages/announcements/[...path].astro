@@ -8,7 +8,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<Base title={`${post.data.title} — Kogen`} description={post.data.summary}>
+<Base title={`${post.data.title} — Kogen`} description={post.data.summary} socialImagePath={`/announcements/social/${post.id}.png`} socialImageWidth={1200} socialImageHeight={630} socialImageAlt={`${post.data.title} — Kogen Announcement`}>
  <main id="main" class="wrap"><article class="prose announcement"><p class="eyebrow"><a href="/announcements/">Announcements</a></p><h1>{post.data.title}</h1>
  <p class="post-meta">{post.data.author}{post.data.status === 'draft' ? ' · Release draft' : <> · <time datetime={post.data.publishedAt!.toISOString()}>{dateLabel(post.data.publishedAt!)}</time></>}{post.data.updatedAt && <> · Updated <time datetime={post.data.updatedAt.toISOString()}>{dateLabel(post.data.updatedAt)}</time></>}</p>
  {post.data.status === 'draft' && <p class="draft-note">Prepared for the first public release. Publication date and release details are still to be confirmed.</p>}
