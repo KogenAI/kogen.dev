@@ -12,8 +12,10 @@ function wrapTitle(title: string, target = 21) {
   const lines: string[] = [];
   for (const word of title.split(/\s+/)) {
     const current = lines.at(-1);
-    if (!current || (current.length + word.length + 1 > target && lines.length < 2)) {
+    if (!current || (current.length + word.length + 1 > target && lines.length < 3)) {
       lines.push(word);
+    } else if (current.length + word.length + 1 > target) {
+      throw new Error(`Social card title exceeds three lines: ${title}`);
     } else {
       lines[lines.length - 1] = `${current} ${word}`;
     }
