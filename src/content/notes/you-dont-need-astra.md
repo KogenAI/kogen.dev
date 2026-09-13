@@ -5,8 +5,20 @@ author: Almir Sarajčić
 status: published
 publishedAt: 2026-09-13
 ---
-Back in July I wrote [“You don’t need Fable.”](https://x.com/ultrathinktrash/status/2073527099952881756)
-Now I’m writing pretty much the same thing about Astra.
+Back in July I wrote:
+
+<aside class="tweet-card" aria-label="Post by Almir Sarajčić on X">
+  <div class="tweet-card-author">
+    <img src="/notes/you-dont-need-astra/almir-avatar.jpg" alt="" width="48" height="48" decoding="async" />
+    <a href="https://x.com/ultrathinktrash"><strong>Almir Sarajčić</strong><span>@ultrathinktrash</span></a>
+    <a class="tweet-card-platform" href="https://x.com/ultrathinktrash/status/2073527099952881756" aria-label="View original post on X">𝕏</a>
+  </div>
+  <blockquote><p>You don't need Fable</p></blockquote>
+  <a class="tweet-card-date" href="https://x.com/ultrathinktrash/status/2073527099952881756"><time datetime="2026-07-04T21:59:19Z">12:59 AM · Jul 5, 2026 EAT</time></a>
+  <div class="tweet-card-source"><a href="https://x.com/ultrathinktrash/status/2073527099952881756">Read on X <span aria-hidden="true">↗</span></a></div>
+</aside>
+
+And now I'm saying the same for Astra. Although, in a lot more words.
 
 I get wanting to use the latest, greatest model. But if you give it a huge scope,
 let it fill the context with everything it comes across, then run out of usage
