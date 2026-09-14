@@ -61,6 +61,12 @@ Keep the exact post text, author, original URL and ISO timestamp in the block;
 store its avatar under `public/notes/<note-slug>/` with explicit image dimensions.
 Do not include X widget scripts or engagement counts that would become stale.
 
+A Note's web page going live is not "published" on its own: the Kogen website
+workflow's default is that publishing a Note includes its established social
+distribution unless Almir explicitly excludes it. The Kogen project workspace's
+website workflow owns the complete procedure; check it before reporting a Note
+as published.
+
 The Astra note snapshot was checked against X syndication post
 `2073527099952881756` on 13 September 2026. The source timestamp is
 `2026-07-04T21:59:19Z`, displayed as 5 July in Africa/Nairobi (EAT).
