@@ -69,6 +69,9 @@ as published. Once a social textarea is filled, wait several seconds before
 submitting and require a fresh visual check that the intended preview or attached
 card is present. A success toast, permalink or direct asset HTTP 200 does not
 replace verification of the saved live presentation.
+For multi-paragraph LinkedIn copy, use real paste or keyboard input in the
+rich-text editor rather than a programmatic value setter, and visibly confirm
+the separate paragraph blocks before saving and again on the live post.
 
 The Astra note snapshot was checked against X syndication post
 `2073527099952881756` on 13 September 2026. The source timestamp is
