@@ -65,7 +65,10 @@ A Note's web page going live is not "published" on its own: the Kogen website
 workflow's default is that publishing a Note includes its established social
 distribution unless Almir explicitly excludes it. The Kogen project workspace's
 website workflow owns the complete procedure; check it before reporting a Note
-as published.
+as published. Once a social textarea is filled, wait several seconds before
+submitting and require a fresh visual check that the intended preview or attached
+card is present. A success toast, permalink or direct asset HTTP 200 does not
+replace verification of the saved live presentation.
 
 The Astra note snapshot was checked against X syndication post
 `2073527099952881756` on 13 September 2026. The source timestamp is
