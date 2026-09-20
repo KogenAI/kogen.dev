@@ -32,5 +32,3 @@ makes the product and UX decisions; Kogen takes the agreed Intent through
 implementation, checks, review, and the resulting Commit. The more clearly the
 work is shaped, the less room there is for an agent to make a plausible change
 that is simply the wrong one.
-
-[Read the verification-plan Intent](https://github.com/KogenAI/kogen/tree/7c7c3426c61c80753043d51766f53ba877c22674/.kogen/intents/complete/rehearsed-verification-plan)
