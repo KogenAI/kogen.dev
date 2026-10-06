@@ -1,0 +1,33 @@
+{
+  "origin": "https://kogen.dev",
+  "name": "Kogen",
+  "description": "Kogen is an in-development software-building project. Its intended workflow is Shape → Approve → Build → Commit; its core is not yet intended for general use.",
+  "siteType": "content",
+  "whenToUse": "Use these pages for current information about Kogen, its origins, development notes, and announcements. Kogen’s core is under active development and is not yet intended for general use; a demonstration of the full workflow is planned. Public HTML pages offer Markdown through Accept: text/markdown and linked .md copies. Use the sitemap to find canonical pages. This site provides project information, not a product interface for agent actions or purchases.",
+  "organization": {
+    "@type": "Organization",
+    "@id": "https://optimum.ba/#organization",
+    "name": "Optimum Tech",
+    "legalName": "Optimum Tech, LLC",
+    "description": "Software development and product consulting. Optimum Tech helps businesses decide what to build, develop the software, and put it to work.",
+    "url": "https://optimum.ba/",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1207 Delaware Ave #2578",
+      "addressLocality": "Wilmington",
+      "addressRegion": "DE",
+      "postalCode": "19806",
+      "addressCountry": "US"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "consulting",
+      "email": "consulting@optimum.ba"
+    },
+    "sameAs": [
+      "https://github.com/optimumBA",
+      "https://www.linkedin.com/company/optimum-tech-llc/",
+      "https://x.com/optimumBA"
+    ]
+  }
+}

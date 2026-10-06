@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && python3 scripts/build-agent-content.py",
     "build:preview": "KOGEN_INCLUDE_DRAFTS=true astro build",
     "preview": "astro preview"
   },

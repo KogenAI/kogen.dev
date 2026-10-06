@@ -88,3 +88,11 @@ make no request to X. Publication uses the separate approval workflow.
 
 Copyright 2026 Optimum Tech, LLC. Licensed under [Apache 2.0](LICENSE).
 Third-party font licenses are included in `public/fonts/`.
+
+## Agent-readable pages
+
+The normal build derives Markdown page twins, `agent-content/`, and `llms.txt`
+from the public Astro pages. Cloudflare Pages middleware negotiates Markdown
+for HTML routes; `agent-site.json` owns the site description and discovery
+guidance, while the About, Contact, and Privacy pages own their visible facts.
+The build also uses Python 3.
