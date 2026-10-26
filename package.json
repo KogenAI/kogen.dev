@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.12.0",
+    "npm": ">=11.19.0"
   },
   "scripts": {
     "dev": "astro dev",
@@ -12,7 +13,15 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/mdx": "8.1.1",
     "astro": "7.3.1",
+    "astro-tweet": "git+https://github.com/dmgawel/astro-tweet.git#0ef388529d827d870d525adae2ba06d3b50f77af::path:packages/astro-tweet",
     "sharp": "0.35.4"
-  }
+  },
+  "overrides": {
+    "astro-tweet": {
+      "astro": "$astro"
+    }
+  },
+  "packageManager": "npm@11.19.0"
 }

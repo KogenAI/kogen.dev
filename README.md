@@ -5,7 +5,8 @@ Built with Astro and intended for Cloudflare Pages.
 
 ## Development
 
-Use Node.js 22.12 or newer.
+Use Node.js 22.12 or newer and npm 11.19 or newer. `.node-version` selects
+the tested Node version.
 
 ```sh
 npm ci
@@ -54,12 +55,18 @@ the same draft and publication fields as announcements, but published URLs use
 `/notes/YYYY-MM-DD/slug/`. Add supporting media under `public/notes/` and use
 root-relative paths from the Markdown source.
 
-### Static tweet cards
+### Tweet embeds
 
-Notes can include a saved `.tweet-card` HTML block styled in `src/styles/global.css`.
-Keep the exact post text, author, original URL and ISO timestamp in the block;
-store its avatar under `public/notes/<note-slug>/` with explicit image dimensions.
-Do not include X widget scripts or engagement counts that would become stale.
+Use MDX (`.mdx`) for Notes containing tweet components:
+
+```mdx
+import Tweet from 'astro-tweet';
+
+<Tweet id="2114594000896176329" />
+```
+
+The component fetches tweet text, avatars and media during rendering/building.
+Rebuild to refresh them; do not copy profile images into `public/`.
 
 A Note's web page going live is not "published" on its own: the Kogen website
 workflow's default is that publishing a Note includes its established social
@@ -73,13 +80,6 @@ For multi-paragraph LinkedIn copy, use real paste or keyboard input in the
 rich-text editor rather than a programmatic value setter, and visibly confirm
 the separate paragraph blocks before saving and again on the live post.
 
-The Astra note snapshot was checked against X syndication post
-`2073527099952881756` on 13 September 2026. The source timestamp is
-`2026-07-04T21:59:19Z`, displayed as 5 July in Africa/Nairobi (EAT).
-To refresh, verify the original post, update its HTML and local avatar, run
-`npm run build`, and inspect the note at desktop and mobile widths with
-`npm run preview`. Keep the saved content if X is unavailable; ordinary builds
-make no request to X. Publication uses the separate approval workflow.
 
 ## Project
 

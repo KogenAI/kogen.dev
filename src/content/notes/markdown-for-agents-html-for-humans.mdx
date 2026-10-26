@@ -1,0 +1,31 @@
+---
+title: Markdown for agents. HTML for humans.
+summary: The source stays Markdown. Astro templates turn it into a website, so I don't hand-write HTML on every report.
+author: Almir Sarajčić
+status: published
+publishedAt: 2026-09-14
+---
+
+import Tweet from 'astro-tweet';
+
+In May, Thariq wrote about the unreasonable effectiveness of HTML for Claude Code:
+
+<Tweet id="2052809885763747935" />
+
+I wasn't convinced. I quoted it the next day:
+
+<Tweet id="2053035151601352872" />
+
+To me, it looked like Thariq was either trying to sell us more of those Anthropic tokens or had gotten spoiled by unlimited usage. It just looked like a waste.
+
+By August I'd reversed course:
+
+<Tweet id="2094401942801788979" />
+
+It's September, years have passed in the AI era, and now I'm older and wiser. I think I've struck a balance between the two: agents write Markdown files that Astro then renders. They don't continuously spend tokens writing all those repetitive HTML tags. They do that work once in the template, then later just write the content.
+
+Of course, the nice-looking images and diagrams Thariq mentioned still need to be generated. The template only removes the repetitive presentation work.
+
+The agent-facing layer is Markdown: cheap to generate, easy to diff, easy to edit by hand afterward. The human-facing layer is HTML: rendered by the template, not re-derived by an agent on every run. For these reports, HTML is the delivery format, not something I ask an agent to hand-author each time.
+
+I still wouldn't ask an agent to write raw HTML for a report it's about to hand me. I'd ask it to write Markdown, and let a template already built for that job turn it into something worth reading.

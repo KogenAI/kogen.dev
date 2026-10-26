@@ -6,19 +6,12 @@ status: published
 publishedAt: 2026-09-20
 ---
 
+import Tweet from 'astro-tweet';
+
 Claude Code 2.1.277 added support for `AGENTS.md` this week. Thariq announced it
 on X:
 
-<aside class="tweet-card" aria-label="Post by Thariq on X">
-  <div class="tweet-card-author">
-    <img src="/notes/markdown-for-agents-html-for-humans/thariq-avatar.jpg" alt="" width="48" height="48" decoding="async" />
-    <a href="https://x.com/trq212"><strong>Thariq</strong><span>@trq212</span></a>
-    <a class="tweet-card-platform" href="https://x.com/trq212/status/2101009392611278961" aria-label="View original post on X">𝕏</a>
-  </div>
-  <blockquote><p>We're adding support for AGENTS.md to Claude Code.</p><p>Starting today in version 2.1.277, if there is no CLAUDE.md in a folder, Claude will check for and use AGENTS.md.</p><p>You can toggle this behavior in /config.</p></blockquote>
-  <a class="tweet-card-date" href="https://x.com/trq212/status/2101009392611278961"><time datetime="2026-09-18T18:04:00Z">9:04 PM · Sep 18, 2026 EAT</time></a>
-  <div class="tweet-card-source"><a href="https://x.com/trq212/status/2101009392611278961">Read on X <span aria-hidden="true">↗</span></a></div>
-</aside>
+<Tweet id="2101009392611278961" />
 
 If a project has no `CLAUDE.md`, Claude Code can now read the same project
 instructions as other coding agents.
@@ -61,16 +54,7 @@ hooks do not fire.
 
 Then there are file references. I asked about this under the announcement:
 
-<aside class="tweet-card" aria-label="Post by Almir Sarajčić on X">
-  <div class="tweet-card-author">
-    <img src="/notes/you-dont-need-astra/almir-avatar.jpg" alt="" width="48" height="48" decoding="async" />
-    <a href="https://x.com/ultrathinktrash"><strong>Almir Sarajčić</strong><span>@ultrathinktrash</span></a>
-    <a class="tweet-card-platform" href="https://x.com/ultrathinktrash/status/2101036988425974195" aria-label="View original post on X">𝕏</a>
-  </div>
-  <blockquote><p>What does this mean for @ file references? Are you gradually going to move away from them, or are the file references going to be supported in AGENTS.md too?</p></blockquote>
-  <a class="tweet-card-date" href="https://x.com/ultrathinktrash/status/2101036988425974195"><time datetime="2026-09-18T19:53:00Z">10:53 PM · Sep 18, 2026 EAT</time></a>
-  <div class="tweet-card-source"><a href="https://x.com/ultrathinktrash/status/2101036988425974195">Read on X <span aria-hidden="true">↗</span></a></div>
-</aside>
+<Tweet id="2101036988425974195" />
 
 I got no answer. However, Claude Code's current documentation now says that
 `@path` imports inside `AGENTS.md` are expanded.
