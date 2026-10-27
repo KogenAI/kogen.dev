@@ -4,8 +4,11 @@ summary: The benchmarks, changes of direction and specification work behind Koge
 author: Almir Sarajčić
 status: published
 publishedAt: 2026-10-27T17:02:13Z
+updatedAt: 2026-10-27T17:20:00Z
 ---
 Elixir seemed like the perfect fit for Kogen. Concurrent work, supervision, recovery when something crashes: these were things I wanted, and things Elixir was good at. It's also the language I'd been working with for years.
+
+Earlier rewrite designs paired an Elixir daemon with a thin Rust client for hooks in Claude Code and Codex. The idea was to keep Elixir running and let a small native program handle each hook call, without starting the BEAM every time the agent used a tool. Rust was there for fast startup and hook response.
 
 But I was building Kogen with coding agents. How well they could write it mattered too. That sent me through benchmarks, implementations in several languages, a return to Elixir, and eventually a change in what Kogen itself should do.
 
@@ -39,7 +42,9 @@ After those comparisons, I still came back to an Elixir engine with a Go CLI. El
 
 Then I decided to move that broader orchestration and product work outside the core, into a separate paid product, which I'll announce soon. Kogen's job became more focused: shape a change, get an Intent approved, then take it through implementation, checks, independent review, rework and a commit.
 
-That changed the language decision. I'd been spending time correcting agent-written Elixir. We already had a Go CLI, and agents could write the rest in Go too. With less orchestration in the core, I didn't have enough reason to keep two languages and the bridge between them.
+Rust had led some of our comparisons, but the later results hadn't established a decisive language winner. For the smaller core, I wanted fast compilation and straightforward tooling for repeated agent edit-and-check cycles. Go's standard library also covered much of the work: HTTP, streamed responses, JSON, processes, files and testing. Those were practical reasons to choose Go.
+
+I'd also been spending time correcting agent-written Elixir. With the broader orchestration moving out of Kogen, I didn't have enough reason to keep two implementation languages and the bridge between them.
 
 The CLI and engine are now one Go program. Kogen no longer bundles Erlang and Elixir or needs the protocol between those two processes. The repository history, accumulated fixes and project records stay with it. Projects built with Kogen still use their own languages and tools.
 
