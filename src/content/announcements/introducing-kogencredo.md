@@ -65,4 +65,4 @@ KogenCredo and OptimumCredo are independent libraries. OptimumCredo focuses on c
 
 Tests, review and static analysis each catch different things. KogenCredo gives you more specific questions to ask of the code; it doesn't replace the others.
 
-[Read the KogenCredo documentation](https://kogen-credo.hexdocs.pm/0.1.0/) · [View the source](https://github.com/KogenAI/kogen_credo)
+[View on Hex](https://hex.pm/packages/kogen_credo/0.1.0) · [Read the documentation](https://kogen-credo.hexdocs.pm/0.1.0/) · [View the source](https://github.com/KogenAI/kogen_credo)
