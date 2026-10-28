@@ -1,0 +1,53 @@
+---
+title: Introducing stack.menu
+summary: Stack guides your coding agent can use to choose a stack, build with it or plan a rewrite.
+author: Almir Sarajčić
+status: published
+publishedAt: 2026-10-28T08:35:39Z
+---
+import Tweet from 'astro-tweet';
+
+DHH's Campfire benchmarks were making the rounds while I was comparing stacks for Kogen. They got me thinking about how much help agents need to build an application properly in each stack. I [wrote about it on ElixirDrops](https://elixirdrops.net/d/rNXGVxhW), then started working on [elixir.menu](https://elixir.menu): agents weren't choosing the right dependencies for Elixir applications, so I wanted to give them a reference they could use with the requirements already in the conversation.
+
+I was also [building Campfire from scratch with that toolset](https://x.com/ultrathinktrash/status/2107386267004518598). The question I wanted to explore was how you would build the same application in each stack, following its conventions and making use of its strengths.
+
+[stack.menu](https://stack.menu) grew out of that work. It extends the idea beyond Elixir, with guidance for choosing a stack, building with one you've already chosen, or planning a rewrite.
+
+<Tweet id="2113156432874918231" />
+
+[Watch the Campfire demo on X](https://x.com/ultrathinktrash/status/2113156432874918231).
+
+## Give your agent a starting point
+
+Tell the agent what you're building and point it at [stack.menu/llms.txt](https://stack.menu/llms.txt). It can read the relevant guides using the requirements already in your conversation.
+
+If you're choosing a stack, those requirements should drive the recommendation: what the application does, where it runs, what needs to work offline, and what you or your team already know. If you've already chosen one, the guide helps the agent work within that choice.
+
+Each stack guide covers the tools and dependencies, how to start a project, conventions to follow and checks to run. There are guides for web applications, services, command-line tools and mobile applications. You can also [browse the library](https://stack.menu/library/) yourself or [compare options](https://stack.menu/choose/) before taking a guide to your agent.
+
+## See it in ChatGPT
+
+In this recording, I ask for a family meal planner and shared shopping list. ChatGPT reads Stack Menu, recommends Phoenix + LiveView with PostgreSQL, and compares it with Next.js and Rails + Hotwire. It takes my Elixir experience into account and explains that offline shopping would need additional client support.
+
+<video controls playsinline preload="metadata" poster="https://stack.menu/media/stack-menu-demo-poster.jpg" aria-label="Stack Menu used in a real ChatGPT conversation to choose a stack for a family meal planner" style="display:block;width:100%;height:auto;margin:24px 0">
+  <source src="https://stack.menu/media/stack-menu-demo.mp4" type="video/mp4" />
+  <a href="https://stack.menu/media/stack-menu-demo.mp4">Watch the ChatGPT demonstration.</a>
+</video>
+
+The recording is sped up and has no audio. Open it fullscreen for a closer look.
+
+## Planning a rewrite
+
+I also used it for a less serious demonstration: planning a WordPress rewrite from PHP to Rust.
+
+<Tweet id="2112970475072844048" />
+
+[Watch the WordPress rewrite plan on X](https://x.com/ultrathinktrash/status/2112970475072844048).
+
+The joke came with an actual plan. The agent used the Rust guide to propose Axum, Tokio, SQLx and PostgreSQL, then broke the rewrite into phases covering the WordPress data, a MySQL-to-PostgreSQL import, the front end, authentication, content, media and the admin UI. It also called out what would happen to PHP plugins. The recording shows the planning, not a completed WordPress port.
+
+That's where the [rewrite guidance](https://stack.menu/rewrite/) comes in: establish what the existing application does, what needs to survive the move and how to check it, then plan an implementation that fits the target stack. You can use it for a Campfire comparison or your own application without asking an agent to translate a codebase line by line.
+
+I use this work for [Kogen](https://kogen.dev/announcements/2026-10-27/kogen-is-now-written-in-go/), but you don't need Kogen to use Stack Menu. Hand the link to the agent you already work with, or integrate the guides into your own tools. The [source is open](https://github.com/KogenAI/stack.menu).
+
+[Give your agent stack.menu](https://stack.menu/llms.txt).
