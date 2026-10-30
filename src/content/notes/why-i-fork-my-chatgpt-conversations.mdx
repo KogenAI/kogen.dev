@@ -1,0 +1,98 @@
+---
+title: "Why I fork my ChatGPT conversations"
+summary: "Organized project files already save me from repeating workflows. Forking a prepared conversation lets the next task reuse the reading too; caching was what led me to investigate it."
+author: "Almir Sarajčić"
+status: "published"
+publishedAt: "2026-10-30"
+---
+import Tweet from 'astro-tweet';
+
+I’ve organized a lot of projects in ChatGPT, each with a corresponding folder in iCloud. The folders have a clear starting point and links to the project knowledge and workflows. An agent in a new conversation can find its way around, read what it needs and get on with the task after I explain it in a sentence or a paragraph.
+
+I have a lot of work that follows the same procedures. I don’t want to explain those procedures every time, so I’ve put that explanation in the files. I can ask about a feature, an issue or another recurring task without first walking the agent through how we do everything.
+
+That solves a lot of repetition for me. The agent still has to do the reading in each new conversation, though, and that uses tokens.
+
+My usage doesn’t drain as quickly as it seems to for some of the people I see on Twitter. I try to use an appropriate model for the task, which I wrote about in [You don’t need Astra](https://kogen.dev/notes/2026-09-13/you-dont-need-astra/). But I’m always looking for ways to reduce the cost.
+
+In one Kogen comparison on 25 October, cached input reached **89.5% for Build and 83.8% for Review**, up from 16.3% and 6.5%. The estimated list-price cost was 67% lower, with the same correctness results. That came from improving cache handling in Kogen’s own requests. I wondered whether I could get a similar benefit in my ChatGPT conversations.
+
+## The cache announcement
+
+Tibo [announced persistent caching](https://x.com/thsottiaux/status/2112712984644784534) for signed-in Codex and Work with “we keep cache forever”. He said returning to an old conversation after a gap would hit the cache without an idle-time penalty.
+
+<Tweet id="2112712984644784534" />
+
+That was the reason I started investigating this. If a conversation had already read the project files and worked through the common setup, I wanted to keep using that preparation. Forking looked like a way to do that while giving each task its own conversation. I didn’t realize then that forking and cache reuse were different things. More on that later.
+
+## A base for feature work
+
+I started with a project conversation that had read the general knowledge. From that I prepared a more specific conversation for feature discussions, with the relevant workflow and tool instructions. Then I forked individual feature tasks from that checkpoint.
+
+These screenshots are from the ChatGPT desktop app for macOS. The first conversation is the feature base; the second is a task about Kogen onboarding:
+
+<figure style="margin:1.5rem 0">
+  <img style="display:block;margin-left:auto;margin-right:auto;max-width:100%;height:auto" src="/notes/prepared-conversation-bases/feature-base.png" alt="ChatGPT for macOS sidebar entry titled Base · Kogen features · v1." width="624" height="84" loading="lazy" />
+  <p style="text-align:center;margin:0.5rem 0" aria-hidden="true">↓</p>
+  <img style="display:block;margin-left:auto;margin-right:auto;max-width:100%;height:auto" src="/notes/prepared-conversation-bases/onboarding-task.png" alt="A task fork in ChatGPT for macOS titled Feature · Kogen onboarding." width="606" height="76" loading="lazy" />
+  <figcaption style="font-size:0.9rem;color:#555">The base contains the shared preparation. The onboarding question gets its own conversation.</figcaption>
+</figure>
+
+The important part is that the base actually reads the files. A list of paths and a promise to read them later won’t put their contents into the inherited history. I ask the agent to read the sources, finish any truncated output, check its understanding and stop before starting a real task.
+
+The task fork can then use what is already there. It adds my new request and reads the current information needed to answer it. It doesn’t need another copy of an unchanged guide that the base has already read.
+
+<figure style="margin:1.5rem 0">
+  <a href="/notes/prepared-conversation-bases/context-branches.svg"><img src="/notes/prepared-conversation-bases/context-branches.svg" alt="Stable project context comes first, followed by feature guidance. Separate tasks share that beginning and append their own new input." width="960" height="820" loading="lazy" /></a>
+  <figcaption style="font-size:0.9rem;color:#555">The tasks share a beginning, then diverge. Open the diagram at full size to zoom in.</figcaption>
+</figure>
+
+I keep the tasks out of the base so the next feature doesn’t inherit an unrelated investigation. I also keep different kinds of work in separate bases. That follows the argument in [I don’t want AGENTS.md](https://kogen.dev/notes/2026-09-20/i-dont-want-agents-md/): agents need the instructions for their particular jobs. The common project knowledge can come first, with the workflow-specific guidance added in its branch.
+
+## What I ended up reusing
+
+Cache was what led me here. The part I can use directly is the prepared conversation itself: the messages, generated answers and results of reading the files. Forking carries that history forward. It doesn’t generate those old answers again or make the agent repeat every operation that produced them.
+
+That can remove work before the task starts: another round of file reads, another explanation of the workflow, another response saying the agent has understood it. The next task can begin with its question.
+
+Provider caching can help with the cost of using the inherited context. When the model answers the next question, the relevant history is still input. If its beginning matches eligible cached input, that part can receive the cached rate. The new answer and reasoning are new output.
+
+So I’m reusing the completed preparation, and potentially its cached processing too. Copying the conversation history and getting a provider cache hit are separate things to check.
+
+OpenAI’s [Standard credit rates](https://learn.chatgpt.com/docs/pricing#token-rates), checked on 30 October, show why the cached part is worth caring about:
+
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:1rem">
+  <caption style="text-align:left;color:#555;padding-bottom:0.6rem">Standard speed · credits per million input tokens</caption>
+  <thead><tr style="border-bottom:2px solid #191919"><th scope="col" style="text-align:left;padding:0.6rem 0.3rem">Model</th><th scope="col" style="text-align:right;padding:0.6rem 0.3rem">Input</th><th scope="col" style="text-align:right;padding:0.6rem 0.3rem">Cached input</th></tr></thead>
+  <tbody>
+    <tr style="border-bottom:1px solid #ddd"><th scope="row" style="text-align:left;padding:0.7rem 0.3rem;font-weight:400">GPT-6.1 Sol</th><td style="text-align:right;padding:0.7rem 0.3rem">50</td><td style="text-align:right;padding:0.7rem 0.3rem">2.5</td></tr>
+    <tr style="border-bottom:1px solid #ddd"><th scope="row" style="text-align:left;padding:0.7rem 0.3rem;font-weight:400">GPT-6.1 Terra</th><td style="text-align:right;padding:0.7rem 0.3rem">25</td><td style="text-align:right;padding:0.7rem 0.3rem">1.25</td></tr>
+  </tbody>
+</table>
+
+For Sol and Terra, eligible cached input costs 95% less at those rates. With Sol, 100,000 ordinary input tokens cost 5 credits; 100,000 cached input tokens cost 0.25. The preparation, new task input and generated output still count.
+
+Tibo’s [later announcement](https://x.com/thsottiaux/status/2113770573994299544) says changing reasoning effort during a Codex or Work conversation no longer invalidates cache. Changing models is a different operation; that announcement doesn’t promise cache reuse across models.
+
+## What the counters showed
+
+I checked the original records from a small signed-in Codex test. We sent the same new question to two forks of one prepared checkpoint:
+
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:1rem">
+  <caption style="text-align:left;color:#555;padding-bottom:0.6rem">Tokens for each new response; inherited cumulative totals excluded</caption>
+  <thead><tr style="border-bottom:2px solid #191919"><th scope="col" style="text-align:left;padding:0.6rem 0.2rem">Response</th><th scope="col" style="text-align:right;padding:0.6rem 0.2rem">Input</th><th scope="col" style="text-align:right;padding:0.6rem 0.2rem">Cached part</th><th scope="col" style="text-align:right;padding:0.6rem 0.2rem">New output</th></tr></thead>
+  <tbody>
+    <tr style="border-bottom:1px solid #ddd"><th scope="row" style="text-align:left;padding:0.7rem 0.2rem;font-weight:400">Fork A</th><td style="text-align:right;padding:0.7rem 0.2rem">11,369</td><td style="text-align:right;padding:0.7rem 0.2rem">0</td><td style="text-align:right;padding:0.7rem 0.2rem">16</td></tr>
+    <tr style="border-bottom:1px solid #ddd"><th scope="row" style="text-align:left;padding:0.7rem 0.2rem;font-weight:400">Fork B</th><td style="text-align:right;padding:0.7rem 0.2rem">11,369</td><td style="text-align:right;padding:0.7rem 0.2rem">11,136</td><td style="text-align:right;padding:0.7rem 0.2rem">16</td></tr>
+  </tbody>
+</table>
+
+Both replies generated 16 new output tokens. One reported 11,136 of its 11,369 input tokens as cached; the other reported zero cached input. The table counts only the new responses, excluding the parent’s old usage totals. Creating the forks had copied the earlier answers, not generated them again.
+
+That confirms the distinction I needed: I can reuse the conversation’s preparation without generating it again, while cache reuse on the next response is a separate observation. The zero in that table is a cached-input count, not zero input, zero output or a measured account deduction. The records don’t explain the difference between the two forks.
+
+A large base can also carry more material than the task needs. I don’t want a high cache percentage to hide the cost of sending a bloated context. A fair comparison needs the full cost of an acceptable result, including preparation and retries, against a fresh conversation given the relevant information.
+
+When a guide changes, I refresh the base. Existing forks don’t acquire later corrections to their parent. And the onboarding task still needs the current installation instructions; inherited preparation doesn’t replace reading changed code or records.
+
+Claude Code also [supports forking a resumed session](https://code.claude.com/docs/en/cli-reference) with `claude --resume <session-id> --fork-session`. The same organization is possible there, but I haven’t looked into its cache and billing behavior. I switched from the Claude desktop app to ChatGPT months ago. For now, the useful change in my own setup is that each recurring task can start after the common reading has already been done.
