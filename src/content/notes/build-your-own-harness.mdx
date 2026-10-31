@@ -1,0 +1,66 @@
+---
+title: "Build your own harness"
+summary: "Why we're building a harness around Kogen's workflow, what the newer Codex comparisons show, and which changes haven't helped."
+author: "Almir Sarajčić"
+status: "published"
+publishedAt: "2026-10-31"
+---
+import Tweet from 'astro-tweet';
+
+If a provider changes its limits, pricing or access, I want to be able to move. I wrote about that in [Don't get locked in](/notes/2026-10-26/dont-get-locked-in/), after trying to plan my work around unpredictable Codex usage resets. I don't want the skills, instructions and setup I've built to become a reason to stay with a provider that no longer fits my work.
+
+Using a harness that isn't owned by the model provider helps with that. [Pi](https://pi.dev) and [OpenCode](https://opencode.ai) are options, and Pi is deliberately minimal and extensible. You can adapt an existing harness without writing the whole thing yourself.
+
+## What Pi already showed
+
+In September, I posted about [HarnessTax](https://harnesstax.github.io/), a study by Melissa Z. Pan and colleagues at UC Berkeley and Arena Intelligence. They compared seven models across Claude Code, Codex CLI and Pi on SWE-bench Lite and Terminal-Bench 2.0, using 30 sampled tasks from each benchmark and three attempts per pairing and task.
+
+The harness often changed cost much more than success rate. On SWE-bench Lite, Claude Code cost about twice as much as Pi across shared models; on Terminal-Bench 2.0, about 1.5 times as much. Pi was competitive with four tools: read, write, edit and bash. An alternative harness had the highest observed success rate in nine of the twelve comparisons involving Anthropic and OpenAI models across the two benchmarks.
+
+<Tweet id="2101938029958922587" />
+
+[Databricks found a similar opportunity on its own codebase](https://www.databricks.com/blog/benchmarking-coding-agents-databricks-multi-million-line-codebase). With the same model and thinking effort, harness costs differed by more than two times in some cases while quality stayed the same. Pi sent about three times less context per turn. They built the benchmark from their own changes because the tasks needed to represent their work.
+
+That makes me want to work on the harness around the models we already have. We can measure what context we send, how tools behave, and what the agent does when a check fails.
+
+## A narrower target
+
+Pi and OpenCode are still too general for my taste. With Kogen, we're focused on a particular way of building software. We have fewer use cases to cover and fewer edge cases to investigate, which makes hill-climbing easier: we can define the tasks we care about, measure a change, and see whether it helps. I think we can get better results for our work by focusing on that narrower target.
+
+## Same model, different harness
+
+We've been comparing Kogen Loop, the model/tool engine extracted from Kogen, with Codex CLI. In a [24-task Go comparison](https://github.com/KogenAI/kogen-bench/tree/main/reproduce/h2h30-sub-route-tokens), both used the same Terra model, comparing medium with medium and high with high. Both passed every task at both efforts.
+
+Kogen Loop used 38.9% of Codex's token-equivalents per passed task at medium effort and 42.2% at high. It used fewer on every task at both settings.
+
+![Our coding agent versus Codex CLI on Go tasks with the same Terra model at matched effort. Subscription-route token-equivalents per passed task: medium 32,697 versus 84,035; high 40,747 versus 96,476. Both passed all 24 tasks at both efforts. Separate same-key API round: both passed all 14 tasks at high effort, with list-price costs per pass of $0.0876 versus $0.1053.](/notes/build-your-own-harness/our-agent-vs-codex-20261031.png)
+
+That subscription-route comparison measures token-equivalents, weighting uncached input, cached input and output differently. We measured API costs separately.
+
+We also compared them using the same API key. On [14 fresh Go tasks at high effort](https://github.com/KogenAI/kogen-bench/tree/main/reproduce/replayconf-14task-high), both passed all 14. Loop cost $0.0876 per pass against $0.1053 for Codex at API list prices, and was cheaper on 13 of the 14 tasks. A [separate 12-task round](https://github.com/KogenAI/kogen-bench/tree/main/reproduce/batch-tool-confirm-12task) also found lower cost: $0.1101 against $0.1420, with both passing every task.
+
+## Build around the work you actually do
+
+A harness decides what context the model receives, which tools it can use, how results come back, how a failed attempt is handled, and when the conversation ends. Those choices affect how much work it does to get to a useful result.
+
+Codex is already a coding agent. Our narrower target is how we want software built with Kogen: a shaped feature, an approved Intent, a bounded Build, checks and review, and a resulting commit. An interactive prototype and an unattended change to an existing application don't need the same tools, context or stopping conditions.
+
+If you know your workflow, you can make those choices around it. You don't have to support every way someone might use a coding agent. You do have to find out whether the specialization helps enough to justify maintaining it.
+
+## Measure the changes you think will help
+
+We tried adding a tool that lets the model batch several operations into one request. In the 12-task confirmation, it did what we expected mechanically: more operations per request. But it didn't demonstrate lower cost or fewer requests than the default loop. Adding only an instruction to batch work didn't help either; that setup failed two tasks.
+
+We also tested reasoning replay, lower text verbosity, an apply_patch tool and a yielding shell. The published comparisons haven't demonstrated an improvement worth adopting from those changes so far. Some results are unresolved because the samples are small. More machinery would have been easy to add without getting a useful improvement.
+
+That's why we define the tasks, checks and comparison before running it. When we're testing one mechanism, we compare the current version with that version plus the change. We keep failures and their cost in the result, and check promising changes on fresh tasks rather than continually tuning against the same examples.
+
+## How much of it should you own?
+
+I would still start with an existing harness for a prototype. Provider integration, cancellation, sessions and context handling are work even when the loop itself is small. Pi's extension system may be enough to give you the workflow you need.
+
+For us, owning more of that workflow is worth investigating because we run it repeatedly and can measure its failures and cost. We can keep the software-delivery decisions in Kogen while changing the engine underneath a stage.
+
+We extracted that engine as [Kogen Loop](/announcements/2026-10-31/kogen-loop-is-now-standalone/), a standalone Go library and CLI. We wanted to use Claude Code with our Claude subscription while keeping our own agent for Claude via an API key, ChatGPT through a subscription or API key, SuperGrok and OpenCode Go. We can change the engine under Kogen without rebuilding the rest of the workflow.
+
+If you're repeatedly working around the same limitations, start with the tools and checks for that task. Use an existing loop where it fits, and measure the parts you change against the work you need done.
