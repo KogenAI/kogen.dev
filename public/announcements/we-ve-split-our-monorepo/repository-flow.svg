@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="465" viewBox="0 0 560 465" role="img" aria-labelledby="title">
+<title id="title">Intent lifecycle</title>
+<rect x="1" y="1" width="558" height="463" rx="16" fill="#f8f8f8" stroke="#d7d7d7"/>
+<g font-family="system-ui,sans-serif" fill="#191919">
+<text x="280" y="39" text-anchor="middle" font-size="25" font-weight="700">Intent lifecycle</text>
+<rect x="20" y="133" width="520" height="282" rx="11" fill="#efefef" stroke="#ccc"/>
+<text x="38" y="158" font-size="16" font-weight="650">Coordinator routes the Build</text>
+<rect x="38" y="58" width="484" height="47" rx="7" fill="#fff" stroke="#ccc"/><text x="52" y="88" font-size="18" font-weight="650">Shape the Intent</text><text x="506" y="87" text-anchor="end" font-family="ui-monospace,monospace" font-size="15">kogen-shaping</text>
+<path d="M280 106 V130 m-4 -4 4 4 4 -4" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="38" y="172" width="484" height="47" rx="7" fill="#fff" stroke="#ccc"/><text x="52" y="202" font-size="18" font-weight="650">Implement the change</text><text x="506" y="201" text-anchor="end" font-family="ui-monospace,monospace" font-size="15">kogen-build</text>
+<path d="M280 220 V230 m-4 -4 4 4 4 -4" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="38" y="233" width="484" height="47" rx="7" fill="#fff" stroke="#ccc"/><text x="52" y="263" font-size="18" font-weight="650">Run the checks</text><text x="506" y="262" text-anchor="end" font-family="ui-monospace,monospace" font-size="15">kogen-verification</text>
+<path d="M280 281 V291 m-4 -4 4 4 4 -4" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="38" y="294" width="484" height="47" rx="7" fill="#fff" stroke="#ccc"/><text x="52" y="324" font-size="18" font-weight="650">Review the candidate</text><text x="506" y="323" text-anchor="end" font-family="ui-monospace,monospace" font-size="15">kogen-review</text>
+<path d="M280 342 V352 m-4 -4 4 4 4 -4" fill="none" stroke="#555" stroke-width="1.6"/>
+<rect x="38" y="355" width="484" height="47" rx="7" fill="#fff" stroke="#ccc"/><text x="52" y="385" font-size="18" font-weight="650">Commit the accepted change</text><text x="506" y="384" text-anchor="end" font-family="ui-monospace,monospace" font-size="15">kogen-coordinator</text>
+<text x="293" y="123" font-size="13">After approval</text>
+<text x="280" y="445" text-anchor="middle" font-size="15">Executor runs model sessions through Loop or Claude Code.</text>
+</g></svg>
