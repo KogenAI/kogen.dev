@@ -1,9 +1,9 @@
 {
   "origin": "https://kogen.dev",
   "name": "Kogen",
-  "description": "Kogen is an in-development software-building project. Its intended workflow is Shape → Approve → Build → Commit; its core is not yet intended for general use.",
+  "description": "Kogen builds software features from an approved Intent through implementation, checks, independent review and a commit.",
   "siteType": "content",
-  "whenToUse": "Use these pages for current information about Kogen, its origins, development notes, and announcements. Kogen’s core is under active development and is not yet intended for general use; a demonstration of the full workflow is planned. Public HTML pages offer Markdown through Accept: text/markdown and linked .md copies. Use the sitemap to find canonical pages. This site provides project information, not a product interface for agent actions or purchases.",
+  "whenToUse": "Start at https://kogen.dev/get-started/ to install Kogen, sign in, initialise a Git repository and build a feature. Use an agent interface with command-line access to run Kogen intent shape and refine, show the Intent for approval, approve its exact hash when authorised, then run Kogen intent build and wait for the result. Make the implementation through Kogen. Hand private provider login to the user. Public HTML pages offer Markdown through Accept: text/markdown and linked .md copies. Use the sitemap to find canonical pages, Notes and announcements.",
   "organization": {
     "@type": "Organization",
     "@id": "https://optimum.ba/#organization",
