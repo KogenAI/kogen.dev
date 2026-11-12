@@ -78,7 +78,7 @@ if sitemap.exists():
     if node.tag.endswith('urlset'):
         namespace=node.tag.removesuffix('urlset');ET.register_namespace('',namespace.strip('{}')) if namespace else None
         known={e.text for e in node.iter() if e.tag.endswith('loc')}
-        for path in ['/about/','/contact/','/privacy/']:
+        for path in ['/learn/','/about/','/contact/','/privacy/']:
             url=origin+path
             if url not in known:
                 entry=ET.SubElement(node,namespace+'url');ET.SubElement(entry,namespace+'loc').text=url
