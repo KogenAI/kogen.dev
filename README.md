@@ -23,6 +23,20 @@ npm run preview
 The static site is generated in `dist/`. Cloudflare Pages uses `npm run build`
 as its build command and `dist` as its output directory.
 
+For changes under `functions/`, also compile the Pages Functions with the
+Wrangler version reported by the latest Cloudflare deployment log. On 16 November
+2026 the builder used 3.114.17. Run this check from a working copy under
+`~/work.noindex/` and retain its output outside the source tree:
+
+```sh
+npm exec --yes --cache "$HOME/work.noindex/npm-cache" --package=wrangler@3.114.17 -- \
+  wrangler pages functions build functions --outfile ../kogen-pages-worker.js
+```
+
+The Astro build and a newer local Wrangler both passed a JSON import with
+`with {type: 'json'}` that this production builder rejected. Keep JSON imports
+compatible with the deployed bundler and repeat this check after Functions edits.
+
 ## Brand assets
 
 The reusable Kogen brand bundle owns the social-preview master. This repository

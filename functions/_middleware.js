@@ -1,5 +1,5 @@
 import {agentContent} from '../lib/agent-response.js';
-import articleRedirects from '../lib/article-redirects.json' with {type: 'json'};
+import articleRedirects from '../lib/article-redirects.json';
 
 export function onRequest(context) {
   const url = new URL(context.request.url);
