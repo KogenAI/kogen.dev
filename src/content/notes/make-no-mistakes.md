@@ -5,30 +5,8 @@ author: Almir Sarajčić
 status: published
 publishedAt: 2026-09-19T20:25:23Z
 ---
-You cannot tell a coding agent to make no mistakes and expect the sentence to
-do any work. The useful question is more demanding: what would count as a
-mistake in this change, and how will the Build find it before the change is
-accepted?
+I want to change how a failed build looks. What does “keep the existing behavior” mean here? For me, I still need to find that build in history and retry it. I don't care if the button moves. If I want the agent to leave the rest alone, I have to say where the screen ends and what it can change.
 
-Ambiguity is where preventable mistakes enter. “Keep the existing behavior”
-does not say which behavior. “Don’t touch anything else” does not say where the
-boundary is. “Run the tests” does not say which evidence can establish the
-claim. An agent can make a reasonable interpretation, produce a plausible
-result, and still break something the person who asked for the work meant to
-preserve.
+I can decide how to check it while I'm thinking about the feature. In this case I’d make a build fail, find it in history and retry it. If I leave it at “run the tests,” the agent can run every test in the project without finding out whether retry works.
 
-Kogen turns those implied decisions into a written Intent. It says what changes,
-what must stay the same, where the work belongs, and how the finished result
-will be checked. That gives Kogen a real job to carry out instead of a vague
-request to interpret.
-
-Decide how you will know the feature works before the agent starts changing
-code. Otherwise the agent is left to choose its own definition of done after
-the fact. A shaped Intent gives it the standard up front: build this feature,
-preserve these things, and show that the result works.
-
-“Make no mistakes” is the outcome that shaping is trying to earn. The human
-makes the product and UX decisions; Kogen takes the agreed Intent through
-implementation, checks, review, and the resulting Commit. The more clearly the
-work is shaped, the less room there is for an agent to make a plausible change
-that is simply the wrong one.
+I shape the work in Kogen before I ask it to build. I make the product and UX choices and look at the Intent. It says what should change, what should stay, where the work belongs and how we’re going to check it. Once I approve it, Kogen builds, runs those checks, gets a review and commits the change. “Make no mistakes” can mean a lot of things. I know what I mean about that button now.

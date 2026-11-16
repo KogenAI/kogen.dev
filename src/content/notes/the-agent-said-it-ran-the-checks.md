@@ -31,7 +31,7 @@ checklist the agent is expected to follow. At the point where the agent is
 trying to say it is done.
 
 We found why that boundary matters. [Codex can report that a turn completed and
-return exit code 0](https://kogen.dev/notes/2026-09-15/codex-exec-can-exit-0-after-failed-checks/)
+return exit code 0](https://kogen.dev/notes/2026-09-15/codex-finished-with-failing-checks/)
 even after a Stop path has exhausted its verification allowance. If I only
 looked at the final message or the process status, I could call that Build
 successful. It was not successful. The hook's recorded result was the

@@ -5,21 +5,15 @@ author: Almir Sarajčić
 status: published
 publishedAt: 2026-10-27T17:02:13Z
 ---
-While preparing [Kogen's Go rewrite](/announcements/2026-10-27/kogen-is-now-written-in-go/), I was benchmarking how well coding agents could build the software in different languages. I wanted to choose a stack, but I also needed to know what to give an agent so it could build what I meant without me correcting it all day.
+I started out [choosing a language for Kogen](/announcements/2026-10-27/kogen-is-now-written-in-go/). I wanted to see what agents could implement and how much of their work I’d have to correct. It seemed like I’d end up with a table and pick a language. The runs went into [Kogen Bench](https://bench.kogen.dev). I did pick Go eventually, but somewhere along the way I started paying more attention to what we were giving the agents.
 
-That became part of [Kogen Bench](https://bench.kogen.dev). We tested language choices, different kinds of specifications, and how much explanation an agent needed. The specifications mattered enough that we kept experimenting with them after choosing the language.
+Elixir had done badly in the early elimination round. Once we had fuller specs and complete implementations, it was doing about as well as the others. In [Race 4](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race4), we ran Rust, Elixir, TypeScript, Go and Gleam four times each. The average for each was somewhere between 62.5 and 65.5 passing tests out of 88. And there were twenty cases they all got wrong. What had we left them to figure out?
 
-## From language choice to specifications
+## Adding examples and models
 
-The early elimination round had put Elixir well behind the other languages. Later, with fuller specifications and complete implementations, the language scores became much closer. In [Race 4](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race4), Rust, Elixir, TypeScript, Go and Gleam averaged between 62.5 and 65.5 passing tests out of 88, over four runs each. Every run failed the same 20 cases.
+We [compared four specification bundles](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race6) using Elixir and Go, with two runs for each condition. The baseline contained prose, schemas and design documents. For the second bundle, we added Quint models and checks; for the third, Gherkin scenarios and their supporting code. The fourth included both additions, along with earlier coverage and results.
 
-That's the plateau we reached: the implementations were getting similar scores and hitting shared failures. The suite had limitations too, so this wasn't proof that the languages were interchangeable. For choosing Kogen's stack, though, a few tests between languages were becoming less useful than understanding what the agents were missing.
-
-## What happened when we added models and scenarios?
-
-We [compared four specification bundles](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race6) in both Elixir and Go. The baseline supplied prose, schemas and design documents. Other versions added Quint models and checks, Gherkin scenarios and supporting code, or a combined bundle.
-
-These are median passing tests out of 106, from two runs per condition:
+Here's how many tests passed, using the median of the two runs out of a possible 106:
 
 <table class="spec-results">
   <thead><tr><th scope="col">Spec bundle</th><th scope="col">Elixir</th><th scope="col">Go</th></tr></thead>
@@ -31,30 +25,24 @@ These are median passing tests out of 106, from two runs per condition:
   </tbody>
 </table>
 
-Every supplemented version scored above the baseline in both languages. The combined bundle reached 40 in each, compared with 23 and 24 for the baseline. That gave us a reason to keep developing specifications the agent could examine and execute alongside the prose.
+Both languages reached 40 with the combined bundle, compared with 23 and 24 for the baseline. We also gave those agents the earlier coverage and results, though, and the machines ran different versions of the harness. To measure the contribution of Quint or Gherkin individually, we'd need to keep those other things the same. For my next Kogen build, I wanted to keep the examples and the checks the agents could run.
 
-This was a small pilot with different harness versions on the two machines, and the bundles differed in supporting information as well as format. The combined version also included earlier coverage and results. We use it as a promising direction to investigate, rather than a measurement of how much Quint or Gherkin alone improves an agent.
+We also tried [Lean and Quint as feedback for agents repairing code](https://github.com/KogenAI/kogen-bench/tree/main/rounds/fv-pilot-2026-10-10). Both repaired all twelve trials, with Lean taking less time and using fewer tokens. Kogen currently uses Quint for stateful specifications. Before replacing it, I want to try authoring and updating specifications with Lean, since we'd need to do that as well as use it to repair implementations.
 
-We also [compared Lean and Quint](https://github.com/KogenAI/kogen-bench/tree/main/rounds/fv-pilot-2026-10-10) as feedback for agents repairing code. Both repaired all twelve trials; Lean used less time and fewer tokens. That leaves Lean worth investigating further. We currently use Quint for stateful specifications, and want to compare the effort and results across writing, implementing and changing a spec too.
+## Removing prose
 
-## Then we tried shortening the prose
+Having detailed scenarios meant we were describing some behavior twice: once in the examples and again in hundreds of words of prose. In [intent-short-1](https://github.com/KogenAI/kogen-bench/tree/main/rounds/intent-short-1), we kept the Gherkin scenarios, step bindings and required specification structure, but reduced a prose body of more than 300 words to 19–23 words. We tested four task variants in Go and Elixir, twice for each version.
 
-Our benchmark specifications had hundreds of words of prose alongside detailed scenarios. We wanted to know whether the prose needed to repeat all those rules.
+Both versions produced eight correct results out of eight. The short version used 19% less total input, although each specification still contained 32–35 scenarios. We could remove most of the prose because those detailed examples were still there for the agent to work from.
 
-In [intent-short-1](https://github.com/KogenAI/kogen-bench/tree/main/rounds/intent-short-1), we compared a prose body of more than 300 words with one of 19–23 words. Both kept the same detailed Gherkin scenarios, step bindings and required specification structure. We tested four task variants in Go and Elixir, twice for each version.
+We had two failures in a [separate prose and Gherkin comparison](https://github.com/KogenAI/kogen-bench/tree/main/rounds/prose-vs-gherkin-1) where we’d left something out. The check wanted a log entry with `id`, `type`, `job`, then `ts`, in that order. That order was in the scenario. We never said it in the prose. I would have had to pick an order too.
 
-Both got eight correct results out of eight. The short-prose runs used 19% less total input. The detail was still there: the scenarios had another 32–35 cases per specification to cover the rules. For those tasks, we could keep the explanation short because the examples carried the detail.
+## Using this in Kogen
 
-Another [prose-and-Gherkin comparison](https://github.com/KogenAI/kogen-bench/tree/main/rounds/prose-vs-gherkin-1) caught an omission that's easy to make. A log entry needed its fields written in a particular order: `id`, `type`, `job`, then `ts`. The prose didn't state that order; a scenario showed the expected output. Two implementations given the prose failed that check. We'd left the agent to guess a requirement we hadn't written down. A concrete example made the missing detail visible.
+When I’m shaping a feature, the part I want to read is why I’m doing it and what I’ve already decided. I put that in the Intent. If I care what order the fields are in, I want an example where I can see that order and where the builder can actually run the check. That goes in Gherkin.
 
-## How Kogen uses this
+Say I cancel a job. Easy enough to write a scenario where I cancel it and check it never runs. What if it’s between a retry and a worker restart when I cancel it? I can try that sequence in Quint while I’m still deciding what should happen.
 
-During shaping, Kogen turns a request into a specification it calls an Intent. Short prose explains the purpose and decisions. Gherkin scenarios describe observable behavior. Quint models cover stateful rules and interactions where a model is useful.
+Once there’s an implementation I want to run the examples against it. Cucumber gets to the app through the step definitions. Kogen also runs the Quint checks and whatever checks the project already has. If a scenario fails, that’s what I want the builder to see next. There’s a separate review before I take the result.
 
-For a job queue, for example, a scenario can describe cancelling a job and check that it doesn't run afterward. A Quint model can explore sequences of events such as cancellation, retries and worker restarts, checking rules that must hold throughout. That helps us find contradictions and missing cases before building the feature.
-
-The same artifacts also feed verification. Kogen runs the Gherkin scenarios against the implementation using Cucumber, with step definitions that exercise the actual application. It checks the Quint model's rules and runs the project's tests and other checks. Failures go back to the builder for rework, followed by independent review. The model checks the specified rules; the executable scenarios check what the software does.
-
-That's what we're trying to get from shaping: a clear target for the agent, with checks that can tell it where the implementation falls short. The experiments have helped us decide what belongs in prose, what needs an example, and when to model the interactions.
-
-We're constantly improving this setup. We'll keep benchmarking and hill-climbing specifications, shaping, verification and review, and publishing what we learn through Kogen Bench.
+If I’m taking a paragraph out, I want to be able to point to the scenario that still tells the builder what happens when I cancel a job, or which field goes where. We could do that in the shorter spec. That’s why we could take so much prose out.

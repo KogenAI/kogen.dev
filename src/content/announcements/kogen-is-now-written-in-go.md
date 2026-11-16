@@ -6,48 +6,56 @@ status: published
 publishedAt: 2026-10-27T17:02:13Z
 updatedAt: 2026-10-27T17:20:00Z
 ---
-Elixir seemed like the perfect fit for Kogen. Concurrent work, supervision, recovery when something crashes: these were things I wanted, and things Elixir was good at. It's also the language I'd been working with for years.
+I'm coming from the Rails world. I adopted the same mentality while working on Elixir, and it's the language I've been working with for years. Concurrent work, supervision, recovery when something crashes - Elixir seemed like the perfect fit for Kogen.
+
+But now I'm not looking at all the code. Agents are writing it. I had an Elixir engine with some CLI parts written in Go, but I realized I wanted to move some of the orchestration stuff outside, in a paid product. So why write the core in Elixir, when agents don't write it that well and I can write everything in Go? That was the question I ended up with after trying a few implementations.
 
 Earlier rewrite designs paired an Elixir daemon with a thin Rust client for hooks in Claude Code and Codex. The idea was to keep Elixir running and let a small native program handle each hook call, without starting the BEAM every time the agent used a tool. Rust was there for fast startup and hook response.
 
-But I was building Kogen with coding agents. How well they could write it mattered too. That sent me through benchmarks, implementations in several languages, a return to Elixir, and eventually a change in what Kogen itself should do.
-
 ## Elixir and coding agents
 
-Around the time I was deciding what to rewrite Kogen in, [DHH was benchmarking stacks](https://x.com/dhh/status/2106810687326486715) for his Campfire rewrite. What stood out to me was how much guidance agents needed to write good Elixir. We could explain what they got wrong, but someone still had to know enough Elixir to correct them.
+When I was looking into what to rewrite Kogen in, [DHH was benchmarking stacks](https://x.com/dhh/status/2106810687326486715) for his Campfire rewrite. I [wrote about it on ElixirDrops](https://elixirdrops.net/d/rNXGVxhW) and [shared it on Twitter](https://x.com/ultrathinktrash/status/2107097268352647469). I got plenty of pushback from other Elixir developers. One thing I’d missed was that the Rust implementation had already been through a few days of tuning, and the Elixir result was from a first commit. I wanted to compare the initial versions, then look at what each got after tuning.
 
-I [wrote about it on ElixirDrops](https://elixirdrops.net/d/rNXGVxhW) and [shared it on Twitter](https://x.com/ultrathinktrash/status/2107097268352647469), which got plenty of pushback from Elixir developers. I like Elixir, but I'm not married to it. If agents need an Elixir expert correcting them while producing better software in another stack, that matters when choosing what to build with.
+I still had the question I started with. If I have to explain what the agent got wrong in Elixir while it writes better code in another stack, that affects what I want to build in. I like Elixir, but I’m not married to it.
 
 I also wanted to help with the guidance they were missing. Agents didn't know which dependencies to choose or how to use the stack's strengths. That led to [elixir.menu](https://elixir.menu), a place to help them make those choices.
 
-For Kogen, I wanted to test the work I actually needed agents to do. I started comparing implementations of job queues, process supervision, streamed model responses, safe Git updates, configuration parsing, event logs and CLI handling. Hidden tests checked correctness and edge cases. Those experiments became part of [Kogen Bench](https://bench.kogen.dev), where I share the work shaping Kogen.
+I was going to need a job queue, supervision, streamed model responses, safe Git updates, config parsing, event logs and a CLI. So I started giving agents those jobs in different languages. I gave them the same task, then ran hidden tests for correctness and edge cases. You can see the runs in [Kogen Bench](https://bench.kogen.dev).
 
-In the [early elimination results I posted](https://x.com/ultrathinktrash/status/2108578154491347152), Rust and TypeScript passed every hidden test in 15 of 18 attempts each. Go passed 12 of 18. Elixir passed 7 of 18. This was GPT-6 Luna max, with minimal guidance and small samples. There wasn't a clear winner, but Elixir was a clear loser in that round.
+In the [early elimination results I posted](https://x.com/ultrathinktrash/status/2108578154491347152), we ran GPT-6 Luna max with minimal guidance. Here is how often each language passed every hidden test:
 
-That was relevant to how I worked. I wanted affordable runs that resembled everyday development, rather than a comparison that assumed an expert would keep correcting the agent. I also ran further experiments with stronger models and more guidance.
+<table class="spec-results">
+  <thead><tr><th scope="col">Language</th><th scope="col">Complete passes</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Rust</th><td>15 of 18</td></tr>
+    <tr><th scope="row">TypeScript</th><td>15 of 18</td></tr>
+    <tr><th scope="row">Go</th><td>12 of 18</td></tr>
+    <tr><th scope="row">Elixir</th><td>7 of 18</td></tr>
+  </tbody>
+</table>
+
+There wasn't a clear winner, but Elixir was a clear loser in that round. These were small samples, using the affordable model I wanted to work with every day.
+
+I kept testing stronger models and giving the agents more guidance to see how much that changed things.
 
 ## What the rewrites taught us
 
-We wrote a language-neutral specification for Kogen's core and a conformance suite, so each implementation had a defined target. I tried full versions in Rust, Go and TypeScript, carrying over the CLI, local state, provider handling and recovery behavior. At one point I picked Rust and started there, then kept exploring.
+Once I had written down what the core had to do, I could have agents write the whole thing in Rust, Go or TypeScript and see whether they got the CLI, local state, providers and recovery right. It was still a new implementation each time, but we had the same conformance suite for all of them.
 
-As the specifications became more complete, the later language races bunched together. In [Race 4](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race4), all five languages averaged between 62.5 and 65.5 passes out of 88. Elixir was near the top again. The runs were hitting many of the same failures: every run failed the same 20 cases. They had reached a similar plateau, rather than one language pulling far ahead. These were small, descriptive comparisons with suite and execution limitations; they didn't establish that the languages were equivalent or that better specs alone caused the change.
+By [Race 4](https://github.com/KogenAI/kogen-bench/tree/main/rounds/race4) we had fuller specifications and the results had bunched together. The five averages ran from 62.5 to 65.5 passing tests out of 88, Elixir was back near the top and all the runs failed the same twenty cases. We changed the specs between rounds and there were limitations in how we ran the tests. I could keep running comparisons and get a slightly different order, but first I wanted to know what was going on with those twenty.
 
-The bigger finding for Kogen was what happened once we had proper specifications. We could describe the behavior once, ask for an implementation in another language and check it against the same contract. The language still affected dependencies, packaging and the work agents needed help with, but we no longer had to rediscover what the program was supposed to do with every rewrite.
+In the end, it didn't really matter which language we were writing in when we wrote proper specs - at least for the things we were testing there. That was a huge finding for how I work on Kogen now, because I can try another implementation and still check the Git updates, event logs and recovery against the same contract. I have to figure out the dependencies and packaging for each language, but I don't have to explain the whole app again.
 
-Those specifications combine short prose explaining the purpose and decisions, Gherkin scenarios describing concrete behavior, and Quint models for stateful rules that need one. The scenarios are connected to executable checks; the models let us examine transitions and invariants. I've written more about the experiments behind that combination in [How much spec does an agent need?](/notes/2026-10-27/how-much-spec-does-an-agent-need/).
+When I’m shaping something I want to read the purpose and the decisions in plain prose. For the behavior itself, give me a Gherkin example. The agent can run the Gherkin example with Cucumber against the app. If it gets the behavior wrong, it has that failure to work on. If I want to see what happens across a sequence of state changes, I try that in Quint. [How much spec does an agent need?](/notes/2026-10-27/how-much-spec-does-an-agent-need/)
 
 ## Coming back to Go
 
-After those comparisons, I still came back to an Elixir engine with a Go CLI. Elixir made sense for the broader system I was planning, with more orchestration living inside Kogen.
+I opted for writing Kogen in Elixir with some CLI parts written in Go. But I realized I wanted to move some of the orchestration stuff outside, in a paid product. I still need Kogen to take a feature I've shaped and approved through a Build, checks, independent review and a commit. So why write the core in Elixir when agents don't write it that well and I can write everything in Go?
 
-Then I decided to move that broader orchestration and product work outside the core, into a separate paid product, which I'll announce soon. Kogen's job became more focused: shape a change, get an Intent approved, then take it through implementation, checks, independent review, rework and a commit.
+We already had a Go CLI, but that doesn't matter. Everything could be written from scratch. Rust had led some comparisons and the later results were close. For the build-and-check loop I care about fast compilation, the tooling and the standard library. Go has the HTTP, streamed responses, JSON, processes, files and tests I need. I was already spending time correcting agent-written Elixir. There wasn’t enough left in the core to make me keep two languages.
 
-Rust had led some of our comparisons, but the later results hadn't established a decisive language winner. For the smaller core, I wanted fast compilation and straightforward tooling for repeated agent edit-and-check cycles. Go's standard library also covered much of the work: HTTP, streamed responses, JSON, processes, files and testing. Those were practical reasons to choose Go.
+So I ended up with one Go program for the CLI and engine. There’s no Erlang and Elixir runtime to bundle and no protocol between the CLI and the other process. The repo history, fixes and project records are the same. Your projects still use their own languages and tools.
 
-I'd also been spending time correcting agent-written Elixir. With the broader orchestration moving out of Kogen, I didn't have enough reason to keep two implementation languages and the bridge between them.
-
-The CLI and engine are now one Go program. Kogen no longer bundles Erlang and Elixir or needs the protocol between those two processes. The repository history, accumulated fixes and project records stay with it. Projects built with Kogen still use their own languages and tools.
-
-The specification work stayed too. Kogen shapes the behavior and how to check it before implementation starts, then runs the executable scenarios, model checks and project checks against the work and gets an independent review. The same specification gives the agent a target to build toward and the verification process a way to find what's missing.
+I wanted the code written the way you’d write Go, while passing the same acceptance scenarios. Those specs are what let me do that without having to explain the app all over again.
 
 [The code and setup instructions are on GitHub](https://github.com/KogenAI/kogen).

@@ -8,79 +8,27 @@ publishedAt: 2026-09-20
 
 import Tweet from 'astro-tweet';
 
-Claude Code 2.1.277 added support for `AGENTS.md` this week. Thariq announced it
-on X:
+Thariq announced that Claude Code 2.1.277 can read `AGENTS.md` if there’s no project `CLAUDE.md`:
 
 <Tweet id="2101009392611278961" />
 
-If a project has no `CLAUDE.md`, Claude Code can now read the same project
-instructions as other coding agents.
+I understand why people wanted that. They want to use the same project instructions with different coding agents. I don’t want `AGENTS.md` at all, though, because I’m also using different agents for different jobs, even within one repository.
 
-I understand why people wanted this. I am against `AGENTS.md` altogether.
+In that Claude Code release, I also had to account for `AGENTS.md` being a fallback for projects without `CLAUDE.md` or `CLAUDE.local.md`, a setting to read both, and sessions that couldn’t load it directly. A directly loaded `AGENTS.md` didn’t show up with memory files in `/context`, and didn’t fire the instruction-loaded hooks. Which files exist above the working directory, which mode I select, the provider, the installed version and whether another file already imported the instructions all affect what the agent gets.
 
-The problem is not that the file has the wrong name or that every coding agent
-invented its own version. The problem is treating one repository-wide set of
-instructions as applicable to every agent that works in the repository.
+I already have the builder’s answer. For review, I want another agent to investigate the change and find what’s wrong with it, without first being walked through why the builder thinks it’s right. The instructions for implementing the change would give it that framing. Making the shared instructions read-only wouldn’t work either, because then the builder couldn’t change the code.
 
-Different agents have different jobs.
+I can put exceptions in the file, of course. The planner, builder and reviewer would each need to find the parts addressed to them among the other roles’ instructions. I knew which job I was giving the agent when I started it. I could have just given it the instructions for that job.
 
-A planning agent should question the request, investigate the software and find
-the decisions that still need to be made. An implementation agent should work
-from the agreed requirements and change the code. A reviewing agent should
-remain independent from the implementation agent's reasoning and look for what
-it missed.
-
-Those agents may work in the same repository. They should not receive the same
-instructions.
-
-A rule can be correct for one of them and harmful to another. Tell every agent
-how to build and the reviewer inherits the builder's framing. Tell every agent
-to remain read-only and the builder cannot do its job. Put all the exceptions in
-the same file and every agent has to work out which paragraphs apply to it.
-
-That is why Kogen does not create project `AGENTS.md` files. Each role gets the
-instructions, inputs and authority that belong to that role. Rules that must
-hold for everyone belong in mechanisms that can enforce them, not in a paragraph
-we hope every model interprets correctly.
-
-Claude Code's new support also shows how quickly a supposedly shared file grows
-another layer of behavior to understand.
-
-By default, Claude Code reads `AGENTS.md` only when it does not find a project
-`CLAUDE.md` or `CLAUDE.local.md`. A setting can make it read both. Some sessions
-cannot load `AGENTS.md` directly. When Claude Code reads the file directly, it
-does not list it with the memory files in `/context`, and its instruction-loaded
-hooks do not fire.
-
-Then there are file references. I asked about this under the announcement:
+There’s another issue with sharing this file between harnesses. I asked about references under the announcement:
 
 <Tweet id="2101036988425974195" />
 
-I got no answer. However, Claude Code's current documentation now says that
-`@path` imports inside `AGENTS.md` are expanded.
+I got no answer there. The Claude Code documentation says `@path` imports are expanded inside `AGENTS.md`, but that doesn’t make them portable. Some harnesses expand them; others document the Markdown file and their own directory precedence. So I need to know whether the thing I wrote is an instruction to import another file or just some text the agent will see.
 
-Other coding agents do not necessarily treat those references the same way.
-`AGENTS.md` standardizes a filename and leaves each harness to define how it
-discovers, combines and interprets the files. Some harnesses expand `@path` as an
-import. Others document only the Markdown file itself and their own directory
-precedence. The same `AGENTS.md` can therefore mean different things depending
-on which agent reads it. That is not much of a standard.
+We’ve agreed on a filename, and I still have to understand each harness’s discovery, combination and interpretation of it. I want agents to understand the project they’re working on. I also want to choose the context for the work I’m asking them to do, instead of loading instructions for every job into every agent.
 
-This is not an argument that Claude Code implemented the feature badly. It is
-what happens when implicit discovery becomes part of the agent's input. Now the
-result depends on which instruction files exist above the working directory,
-which mode is selected, which provider runs the session, which version is
-installed, and whether another file imported the same instructions.
-
-Giving the file a standard name did not make its behavior standard. It still
-depends on which coding agent reads it.
-
-Project context matters. Agents need to understand the software they are working
-on. I just don't think a globally loaded instruction file is the right way to
-give it to them.
-
-There are better ways to deal with project context, but that is a story for
-another time.
+In Kogen, I give the planner the job of questioning the request, investigating the software and finding the decisions we still need to make. After we agree on the requirements, the builder can change the code, then another agent reviews it independently. Each gets the instructions, inputs and authority for its job; Kogen doesn’t create project `AGENTS.md` files. If a rule has to hold for all of them, I want the system to enforce it. It shouldn’t depend on whether each model understood my paragraph the same way.
 
 [Claude Code 2.1.277 release notes](https://github.com/anthropics/claude-code/releases/tag/v2.1.277)
 

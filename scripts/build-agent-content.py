@@ -47,6 +47,24 @@ def render(node,origin):
     return body
 
 config=json.loads(Path('agent-site.json').read_text());dist=Path(config.get('outputDirectory','dist'));origin=config['origin']
+# Pages Functions redirect HTML; static rules preserve Markdown twins and shared cards too.
+article_redirects = json.loads(Path('lib/article-redirects.json').read_text())
+redirect_rules = []
+for old, new in article_redirects.items():
+    old_path = old.rstrip('/')
+    new_path = new.rstrip('/')
+    collection, _, old_slug = old.strip('/').split('/')
+    new_slug = new.strip('/').split('/')[-1]
+    representations = [
+        (old, new),
+        (old_path, new),
+        (old_path + '.md', new_path + '.md'),
+        ('/agent-content' + old_path + '.md', '/agent-content' + new_path + '.md'),
+        (f'/{collection}/social/{old_slug}.png', f'/{collection}/social/{new_slug}.png'),
+    ]
+    for source, target in representations:
+        redirect_rules.append(f'{source} {target} 301')
+(dist / '_redirects').write_text('\n'.join(redirect_rules) + '\n')
 for page in dist.rglob('*.html'):
     if page.name=='404.html':continue
     parser=Parser();parser.feed(page.read_text());main=find(parser.root,'main') or find(parser.root,'body')
