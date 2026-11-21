@@ -1,0 +1,6 @@
+chatgpt
+supergrok
+opencode-go
+anthropic
+claude-code
+openai-compatible

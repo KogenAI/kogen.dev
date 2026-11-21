@@ -1,0 +1,1 @@
+{"deferred":"The shaping time budget ran out before the whole-file correct implementation and seven patch-based wrong implementations could be transcribed into controls.json; the Build writes the implementation, whose scratch version was built and checked locally (npm run build produced dist/providers/index.html, dist/providers.md, the llms.txt link and the sitemap entry)."}

@@ -77,10 +77,11 @@ for page in dist.rglob('*.html'):
     target=dist/'agent-content'/('index.md' if route=='/' else route.lstrip('/')+'.md');target.parent.mkdir(parents=True,exist_ok=True);target.write_text(md)
     twin=dist/('index.md' if route=='/' else route.lstrip('/')+'.md')
     if not twin.exists():twin.parent.mkdir(parents=True,exist_ok=True);twin.write_text(md)
+    if route=='/providers':(dist/'providers'/'index.md').write_text(md)
 # Existing themed exports and instructions remain authored; append a dedicated, discoverable guide.
 llms=dist/'llms.txt';existing=llms.read_text() if llms.exists() else '# '+config['name']+'\n\n'+config['description']+'\n'
 if '## When to use' not in existing:existing+='\n## When to use\n\n'+config['whenToUse']+'\n\n'
-existing+='\n## Public site resources\n\n- [Homepage Markdown]('+origin+'/agent-content/index.md)\n- [About]('+origin+'/about/)\n- [Contact]('+origin+'/contact/)\n- [Privacy]('+origin+'/privacy/)\n- [Sitemap]('+origin+'/sitemap.xml)\n'
+existing+='\n## Public site resources\n\n- [Homepage Markdown]('+origin+'/agent-content/index.md)\n- [About]('+origin+'/about/)\n- [Contact]('+origin+'/contact/)\n- [Privacy]('+origin+'/privacy/)\n- [Providers]('+origin+'/providers/)\n- [Sitemap]('+origin+'/sitemap.xml)\n'
 llms.write_text(existing)
 headers=dist/'_headers';body=headers.read_text() if headers.exists() else ''
 if '/*.md\n  Content-Type: text/markdown;' not in body:body+='\n/*.md\n  Content-Type: text/markdown; charset=utf-8\n'

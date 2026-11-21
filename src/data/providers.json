@@ -1,0 +1,70 @@
+{
+  "providers": [
+    {
+      "name": "chatgpt",
+      "account": "ChatGPT subscription",
+      "kind": "built in",
+      "instructions": {"label": "ChatGPT setup", "href": "/get-started/"},
+      "roles": {
+        "shape": {"verified": true, "record": "spec/reference/model-family-qualification.md"},
+        "build": {"verified": true, "record": "spec/reference/model-family-qualification.md"},
+        "review": {"verified": true, "record": "spec/reference/model-family-qualification.md"}
+      }
+    },
+    {
+      "name": "supergrok",
+      "account": "SuperGrok subscription",
+      "kind": "built in",
+      "instructions": {"label": "SuperGrok setup", "href": "/get-started/"},
+      "roles": {
+        "shape": {"verified": false, "record": ""},
+        "build": {"verified": false, "record": ""},
+        "review": {"verified": false, "record": ""}
+      }
+    },
+    {
+      "name": "opencode-go",
+      "account": "OpenCode Go workspace key",
+      "kind": "built in",
+      "instructions": {"label": "OpenCode Go setup", "href": "/get-started/"},
+      "roles": {
+        "shape": {"verified": false, "record": ""},
+        "build": {"verified": false, "record": ""},
+        "review": {"verified": false, "record": ""}
+      }
+    },
+    {
+      "name": "anthropic",
+      "account": "Anthropic API key",
+      "kind": "built in",
+      "instructions": {"label": "Anthropic API key setup", "href": "/get-started/"},
+      "roles": {
+        "shape": {"verified": false, "record": ""},
+        "build": {"verified": false, "record": ""},
+        "review": {"verified": true, "record": "spec/reference/model-family-qualification.md"}
+      }
+    },
+    {
+      "name": "claude-code",
+      "account": "Claude subscription",
+      "kind": "built in",
+      "instructions": {"label": "Claude subscription setup", "href": "/get-started/"},
+      "roles": {
+        "shape": {"verified": false, "record": ""},
+        "build": {"verified": false, "record": ""},
+        "review": {"verified": false, "record": ""}
+      }
+    },
+    {
+      "name": "openai-compatible",
+      "account": "Endpoint base URL and API key",
+      "kind": "custom endpoint",
+      "instructions": {"label": "QwenCloud setup", "href": "/get-started/#qwencloud"},
+      "roles": {
+        "shape": {"verified": false, "record": ""},
+        "build": {"verified": false, "record": ""},
+        "review": {"verified": false, "record": ""}
+      }
+    }
+  ]
+}

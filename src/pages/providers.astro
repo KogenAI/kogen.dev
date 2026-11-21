@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/providers.json';
+
+const state = (role) => (String(role?.record ?? '').trim() !== '' ? 'verified' : 'not qualified');
+const roles = (provider) => `Shape: ${state(provider.roles.shape)}; Build: ${state(provider.roles.build)}; Review: ${state(provider.roles.review)}`;
+---
+<Base title="Providers — Kogen" description="Compare every provider name the Kogen CLI accepts: the account or key each needs, the roles verified and where to set it up.">
+<main id="main" class="wrap"><article class="prose providers"><p class="eyebrow">Providers</p><h1>Providers Kogen accepts.</h1><p class="lead">Every provider name the Kogen CLI accepts, with the account it needs and the roles with a qualification record.</p>
+<p>A role shows as verified only when a qualification record backs it. Other roles are not qualified, so treat them as experimental.</p>
+<div class="table-scroll"><table class="provider-table"><thead><tr><th scope="col">Provider</th><th scope="col">Account or key needed</th><th scope="col">Roles verified</th><th scope="col">Built in or custom</th><th scope="col">Instructions</th></tr></thead><tbody>
+{data.providers.map((provider) => (<tr><td><code>{provider.name}</code></td><td>{provider.account}</td><td>{roles(provider)}</td><td>{provider.kind}</td><td><a href={provider.instructions.href}>{provider.instructions.label}</a></td></tr>))}
+</tbody></table></div>
+<p class="small">Start with <a href="/get-started/">Get started</a>.</p></article></main>
+</Base>
