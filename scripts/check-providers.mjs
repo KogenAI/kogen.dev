@@ -23,13 +23,28 @@ for (const name of names) {
 for (const name of providerNames) {
   if (!names.includes(name)) problems.push(`provider ${name} is not a CLI provider name in ${namesPath}`);
 }
+const states = ['configurable', 'connection tested', 'role verified'];
+const evidencePrefix = 'https://app.kogen.studio/workspaces/optimum/projects/kogen/documents/';
+const filled = (value) => typeof value === 'string' && value.trim() !== '';
 for (const provider of providers) {
   for (const role of ['shape', 'build', 'review']) {
     const entry = provider?.roles?.[role];
-    if (!entry || typeof entry !== 'object' || typeof entry.verified !== 'boolean' || typeof entry.record !== 'string') {
-      problems.push(`provider ${provider?.name}: role ${role} is missing`);
-    } else if (entry.verified && entry.record.trim() === '') {
-      problems.push(`provider ${provider?.name}: role ${role} is verified with an empty record`);
+    const where = `provider ${provider?.name}: role ${role}`;
+    if (!entry || typeof entry !== 'object') {
+      problems.push(`${where} is missing`);
+      continue;
+    }
+    if (!states.includes(entry.state)) problems.push(`${where} has no valid state`);
+    if (!filled(entry.evidence) || !entry.evidence.startsWith(evidencePrefix)) problems.push(`${where} has no evidence link`);
+    if (entry.state === 'role verified') {
+      for (const field of ['model', 'effort', 'record']) {
+        if (!filled(entry[field])) problems.push(`${where} is role verified without ${field}`);
+      }
+    }
+    if (entry.state === 'connection tested') {
+      for (const field of ['model', 'effort', 'date']) {
+        if (!filled(entry[field])) problems.push(`${where} is connection tested without ${field}`);
+      }
     }
   }
 }
