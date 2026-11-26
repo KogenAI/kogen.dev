@@ -1,0 +1,104 @@
+---
+title: "Fine, I’ll Fix ChatGPT Myself"
+summary: "Comparing two packaged desktop app versions and investigating a regression."
+author: "Almir Sarajčić"
+status: "published"
+publishedAt: "2026-11-26"
+---
+import Tweet from 'astro-tweet';
+
+I’ve been reporting problems with ChatGPT and Codex for months. In August, Terra kept compacting the context and spending tokens without producing anything. I tagged Tibo, and later found that Sol was affected too. One session eventually started responding again.
+
+<Tweet id="2084918291349574010" />
+
+In September, a pet I hadn’t created appeared in the desktop app. It came back after I closed it, so I tagged Tibo again.
+
+<Tweet id="2098099194812666060" />
+
+<Tweet id="2098264518899970172" />
+
+A few days later, I asked Tibo to fix another issue I had posted about: the Codex terminal display had become garbled. Around that time, I also wrote about [turning off Codex terminal animations](/notes/2026-09-11/turn-off-codex-terminal-animations/).
+
+<Tweet id="2099780079307944437" />
+
+My impression is that the issues I reported to Tibo eventually got fixed, sometimes quickly. I think Tibo then moved to a different role, and Andrew became responsible for Codex. Since then, I’ve reported issues to Andrew that still haven’t been fixed a month later.
+
+In November I sent Andrew a list of reports in DMs: messages I couldn’t send after an update, steering messages that weren’t displayed, inconsistent menus, and an unread indicator that didn’t always appear. The list also included requests to archive projects and pin chats inside them.
+
+When Andrew asked users for more bugs, I posted the list again. I had received a reply on one tweet after a month. Where is the customer support for a product I pay $200 a month for?
+
+<Tweet id="2125885865276612896" />
+
+I had enough of that, and I was in the mood to roll up my sleeves and handle it myself. Unfortunately, the desktop app isn’t open-source like Codex is, so I thought that might be impossible.
+
+<Tweet id="2125894684643856566" />
+
+This started with a chat I couldn’t move into a section, either through the menu or by dragging it. I use sections to organize my chats, including the bases I fork for different kinds of work. Looking into that uncovered bigger problems with how the app handled local projects and chats.
+
+<Tweet id="2125850915798409402" />
+
+![The three-dot chat menu before the patch, without a Section action.](/notes/fine-ill-fix-chatgpt-myself/before-ellipsis-menu.png)
+
+![The chat context menu before the patch, without a Section action.](/notes/fine-ill-fix-chatgpt-myself/before-context-menu.png)
+
+<Tweet id="2125900548155003016" />
+
+<Tweet id="2125900946664456313" />
+
+I found and installed a version from about a week earlier that worked. Then I asked a coding agent to compare the two, investigate the regression, and try to fix it. I gave it the symptoms and the versions where I’d seen the behavior work and fail.
+
+## Comparing the two versions
+
+In version **26.1111.71025**, I could create a chat in a new local project and the section controls appeared. In **26.1120.50957**, the newer version, I was running into the regression.
+
+A couple of days earlier, Tibo had announced a limited rollout of a combined Chat and Work experience. Maybe this bug is part of that merge.
+
+<Tweet id="2125284868414394550" />
+
+I couldn’t stay on the old version. My data had already been migrated to a newer schema, and the old app couldn’t resume some of my existing conversations. I have plenty of conversations I return to from time to time, so the agent worked on a separate copy of the newer app.
+
+The desktop app is packaged from an Electron build, with an Owl runtime and JavaScript in an `app.asar` archive. The code isn’t the original source, but it was there to inspect and change.
+
+The agent extracted the packaged code from both versions and searched the bundled and minified JavaScript for stable strings and module names. It traced what happens when I create a chat: how the app chooses where it runs and builds the Section menu. It also checked the project and chat records to see what the app had saved.
+
+The agent found a feature gate called `singleRunLocation` that could favor Cloud and hide the Local choice.
+
+## Getting the patched app to open
+
+The agent changed the packaged JavaScript in a separate copy of the newer app. The first copy crashed on launch. I gave the agent the crash report, which pointed to `OwlPackagedAsar`.
+
+The app checks its archive in more than one place. The agent updated the archive, its property-list hash and an embedded framework digest, then re-signed the copy. This time it opened.
+
+The re-signed app no longer had OpenAI’s signing identity. The signing check prevented native ChatGPT App Tools from connecting, so the agent couldn’t use it to communicate with other chats.
+
+## A local project that appeared to turn into Cloud
+
+The first behavioral patch still missed something. I created a local project called **Hi** and sent **Test Request**. Afterward, the project appeared as Cloud.
+
+The agent checked the saved records. The local project and its folder were still there, but the app had created a server counterpart and linked it to the project. The new chat was ChatGPT-backed.
+
+The first patch covered one composer layout. The agent found another and revised the patch to default native local projects to Local in both, while keeping an explicit Cloud choice. It also found multiple copies of the Section menu code and updated both.
+
+The investigation chat itself was ChatGPT-backed. In the newer app, those sidebar rows had lost the Section actions. That could leave a chat visible in a section without a menu option to move it.
+
+## Testing it
+
+The agent checked the archive, its hashes and signature, and the JavaScript syntax. It also tested the changed composer and menu paths. The agent couldn’t control a second ChatGPT instance through Computer Use, so I tested the patched copy myself.
+
+Logging out had fixed another issue, but it didn’t fix this one: chats and projects still became Cloud afterward. The patch fixed the local project behavior.
+
+After restarting Patched-v3, two local Focus assignments were still there, and I could reopen the investigation chat.
+
+![The local investigation chat in NJUUU, with the Section menu open in the patched app.](/notes/fine-ill-fix-chatgpt-myself/local-investigation-section.png)
+
+## Getting chats to talk to each other
+
+The unpatched app had separate messaging failures too. Attempts from a ChatGPT-backed chat to a local chat failed, while a message between local chats eventually worked. I don’t know whether cloud-to-local messaging is supported or whether that difference caused those failures.
+
+The agent built a separate Local Chat Relay using supported Codex interfaces. After a restart, I tested it from the desktop chat: a message reached another local chat, and it replied. It could also create a local chat and exchange messages in both directions.
+
+The agent wouldn’t bypass the signing or peer-authentication checks. Instead, it built the relay around supported Codex interfaces. That gives me local chat coordination, but I shouldn’t have to use a separate tool to get the app working.
+
+## Open the desktop app
+
+OpenAI, open-source the desktop app. Codex is already open-source. If your team can’t fix these problems, let the community do it. I shouldn’t have to patch a closed app and build workarounds for its signing checks just to get my work done.
